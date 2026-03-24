@@ -1,0 +1,5 @@
+- The team page shows a list of existing members they can click to edit
+- Anyone can edit quest configurations
+- The team ID can be shared as a url
+- stale reads are ok for now
+- The maximum team size is 15 for now

@@ -1,0 +1,6 @@
+- Availability granularity should be 30 minutes
+- The output time zone should be browser-detected
+- Members can be removed from a team
+- There should be an optional team name
+- One quest configuration per team, but the configuration settings can be changed
+- Instead of showing all of the available times to sent invites, the browser should display all of the times in the next 24 hours

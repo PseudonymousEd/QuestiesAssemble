@@ -1,0 +1,13 @@
+- Knowledge of Tonic Quest mechanics are not necessary
+- Available is recurring. A quest typically finishes in 2-3 days, at which time a quest organizer will send out invites for a new quest
+- Availability means a member needs to be at their phone for 1 minute during the window
+- Team data should persist indefinitely, in the beginning, 1 month is fine
+- If there are no fully overlapping windows, then the first version will just tell the users no window exists
+- Future versions can extend the Time Reserved for Invitees incrementally by 1 hour, and indicate that in the output
+- Mobile friendly UI is not a priority for V1
+- Every time a new user enters in their information, the best times are updated. The information just appears on the page
+- In practice, all of the participants will enter in their availability times, and this information will persist for weeks as they complete quests and start new ones
+- In practice, people will change their own available information on the website as their availability changes
+- We will restrict this to 10 digit numbers, because that is easy to remember like a phone number. There will be a limited number of users to start.
+- In future versions, you will be able to select and deselect users on a team, and just calculate the availablity for selected users. For example, if the team maximum were 8, but you have a 10 person team that rotates some people in and out, you can select the ones who are rotated in.
+- Let's assume the name will be "Questies Assemble!"

@@ -1,0 +1,62 @@
+Initial Ideas for the Tonic Quest Accept Scheduler
+
+I want to solve a fairly simple problem in Tonic having to do with scheduling quests.
+
+A quest is an online group activity. Depending on the specifics of the quest, it involves somewhere between 3-8 invited participants.
+The quest organizer sends out a set of invites to 3-7 other participants (the quest organizer is automatically a participant).
+The invited participants may accept the quest whenever they can.
+Once there are a minimum number of participants in the quest, the quest gives an hour long countdown, then begins.
+If a certain amount of time passes without there being a minimum number of participants joining the quest, then the quest opens up and people who weren't invited may join the quest. The certain amount of time that passes is unknown. It may be 3 hours, it maybe 8, it may be 20.
+
+The problem has to do with time zones.
+
+Some quest teams have members in very different time zones. They want to know when is the best time to send out invites so that everyone on the team has the opportunity to accept before time runs out and random people fill the quest up.
+
+What I want to propose it a website that allows team members to enter in the times (in their own time zone) when they will probably be available to accept a quest - this is an activity that will take about 1 minute.
+Once everyone on the team enters in their availability, the website will list the times that are best to send out invites and reduce the risk of random people joining.
+
+Let's define some terms:
+TQAS System = The Tonic Quest Accept Scheduler System, the website
+Quest Organizer = The person sending out invites to their team members
+Quest Invitees = The people the quest organizer wants on their team
+Quest Minimum Participants = The minimum number of participants a quest can have
+Quest Maximum Participants = The most participants a quest can have
+Quest Maximum Invites = The most invites a quest organizer can send out
+Time Reserved For Invitees (in hours)
+Required Action Time = for the purposes of this version, 1 minutes. This will be hardcoded to start, but a future enhancement may be to make the value larger for more complicated actions
+
+Let's give a minimum viable product example:
+The quest organizer is PersonA. The quest invitees are PersonB - PersonH.
+PersonA goes to the website. The website has two options: Create a Team, Examine a Team (with a text box to enter the team id)
+PersonA selects Create a Team.
+Website creates a team with a 10 digit ID.
+On the Create a Team page, PersonA enters in the following information:
+Quest Minimum Participants: 8
+Quest Maximum Participants: 10
+Quest Maximum Invites: 7
+Time Reserved for Invitees (in hours): 5
+Required Action Time: 1 minute (user may not change this value)
+
+
+PersonA clicks on an Add Member button and enters their information:
+Name: PersonA
+Time Zone: Pacific
+PersonA selects the times when they are available to accept a quest invite from a spreadsheet-like list of times
+9am - 10pm
+
+PersonA gives the ID to all of their teammates.
+
+PersonB through PersonH go to the website. Either they go to the main page and enter the ID, or go directly with a url.
+
+Each person selects "Add Member" and enters their information.
+
+Every time a person enters in their information, the TQAS system lists the times where, if an invite were sent out, every member of the team would be available to spend the required action time (1 minute) accepting the invite before the the Time Reserved for Invitees has passed
+
+
+Considerations:
+I do not want to host this
+A future enhancement would require logins and passwords, for security
+I do not know what technologies would be best for this
+I would like to minimize the cost of hosting this (free is best)
+I would like to know if there are any websites that already to this
+I may wish to call this service something like "Questies Assemble!" or "Tonic Questies Assemble!"

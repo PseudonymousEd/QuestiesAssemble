@@ -1,0 +1,4 @@
+- The code will live in a GitHub repository. The repo will be created before STage 1
+- Stage 1 should already include Tailwind
+- Supabase project should be created as part of Stage 1
+- We are not ready for stage 1 yet. When the only question remaining is "Are you ready to bein Stage 1", I will have questions to understand the plan better

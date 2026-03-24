@@ -1,0 +1,7 @@
+- If the viewer loads the page at 3:15pm, the first candidate slot should be 3pm. We want people to know to send the invites now if that is an option, rather than making them wait 15 minutes til the beginning of the next slot.
+- Results should be a plain list
+- Manual refresh is sufficient
+- If a member is deleted, recalculate silently
+- For our purposes, it is OK for there to be fewer than the minimum numbers. We just want to guarantee all active members have an opportunity to accept
+- answer to question 5 (time zone label on availability entry) is yes
+- The 10 digit numeric ID is generated randomly

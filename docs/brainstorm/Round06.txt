@@ -1,0 +1,5 @@
+- Let's have the dedicated page for the members
+- confirm is fine
+- Home page should have a brief description of what it does
+- Team Not Found message is good
+- When we are ready to move to implementation, we should not go directly to implementation. I would prefer to have a hello world site first. I would also prefer to have another intermediate product with similar but bare bones features before moving to full implementation.
