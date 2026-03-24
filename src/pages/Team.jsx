@@ -1,54 +1,108 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { getGoodInviteTimes } from '../utils/scheduler'
+import { detectBrowserTimezone } from '../utils/timezone'
 import ResultsList from '../components/ResultsList'
+import TimezoneSelector from '../components/TimezoneSelector'
+import NavBar from '../components/NavBar'
+
+function formatTeamId(id) {
+  return `${id.slice(0, 4)}-${id.slice(4, 7)}-${id.slice(7)}`
+}
+
+const CONFIG_FIELDS = [
+  { field: 'min_participants', label: 'Min participants' },
+  { field: 'max_participants', label: 'Max participants' },
+  { field: 'max_invites', label: 'Max invites' },
+  { field: 'time_reserved_hours', label: 'Time reserved for invitees (hours)' },
+]
 
 export default function Team() {
   const { id } = useParams()
   const navigate = useNavigate()
+
   const [team, setTeam] = useState(null)
   const [members, setMembers] = useState([])
   const [slots, setSlots] = useState([])
   const [notFound, setNotFound] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [lastUpdated, setLastUpdated] = useState(null)
 
-  useEffect(() => {
-    async function load() {
-      const { data: teamData } = await supabase
-        .from('teams')
-        .select('*')
-        .eq('id', id)
-        .maybeSingle()
+  const [viewerTz, setViewerTz] = useState(() => detectBrowserTimezone())
+  const [showTzOverride, setShowTzOverride] = useState(false)
 
-      if (!teamData) {
-        setNotFound(true)
-        setLoading(false)
-        return
-      }
+  const [editingConfig, setEditingConfig] = useState(false)
+  const [configDraft, setConfigDraft] = useState({})
+  const [savingConfig, setSavingConfig] = useState(false)
 
-      const { data: membersData } = await supabase
-        .from('members')
-        .select('*')
-        .eq('team_id', id)
+  const load = useCallback(async () => {
+    const { data: teamData } = await supabase
+      .from('teams')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle()
 
-      const memberIds = (membersData || []).map(m => m.id)
-      let slotsData = []
-      if (memberIds.length > 0) {
-        const { data } = await supabase
-          .from('availability_slots')
-          .select('*')
-          .in('member_id', memberIds)
-        slotsData = data || []
-      }
-
-      setTeam(teamData)
-      setMembers(membersData || [])
-      setSlots(slotsData)
+    if (!teamData) {
+      setNotFound(true)
       setLoading(false)
+      return
     }
-    load()
+
+    const { data: membersData } = await supabase
+      .from('members')
+      .select('*')
+      .eq('team_id', id)
+
+    const memberIds = (membersData || []).map(m => m.id)
+    let slotsData = []
+    if (memberIds.length > 0) {
+      const { data } = await supabase
+        .from('availability_slots')
+        .select('*')
+        .in('member_id', memberIds)
+      slotsData = data || []
+    }
+
+    setTeam(teamData)
+    setMembers(membersData || [])
+    setSlots(slotsData)
+    setLastUpdated(new Date())
+    setLoading(false)
   }, [id])
+
+  useEffect(() => { load() }, [load])
+
+  async function handleSaveConfig() {
+    setSavingConfig(true)
+    const update = {}
+    for (const { field } of CONFIG_FIELDS) {
+      const v = parseInt(configDraft[field], 10)
+      if (!isNaN(v)) update[field] = v
+    }
+    const { data: updated, error } = await supabase
+      .from('teams')
+      .update(update)
+      .eq('id', id)
+      .select()
+      .single()
+    if (!error && updated) {
+      setTeam(updated)
+      setLastUpdated(new Date())
+    }
+    setEditingConfig(false)
+    setSavingConfig(false)
+  }
+
+  async function handleRemoveMember(member) {
+    if (!window.confirm(`Remove ${member.name} from this team?`)) return
+    await supabase.from('members').delete().eq('id', member.id)
+    await load()
+  }
+
+  function handleRefresh() {
+    load()
+  }
 
   if (loading) {
     return (
@@ -69,21 +123,87 @@ export default function Team() {
     )
   }
 
-  const goodTimes = getGoodInviteTimes(members, slots, team.time_reserved_hours, new Date())
+  const goodTimes = getGoodInviteTimes(members, slots, team.time_reserved_hours, new Date(), viewerTz)
 
   return (
+    <div>
+    <NavBar />
     <div className="max-w-xl mx-auto px-6 py-10">
-      <h1 className="text-3xl font-bold text-gray-900 mb-1">Questies Assemble!</h1>
-      <p className="text-sm text-gray-500 mb-8">Team ID: {id}</p>
+      <h1 className="text-3xl font-bold text-gray-900 mb-1">
+        {team.name || `Team ${formatTeamId(id)}`}
+      </h1>
+      <p className="text-sm text-gray-500 mb-1">Team ID: {formatTeamId(id)}</p>
+      <p className="text-xs text-gray-400 mb-8">
+        Times shown in: <strong>{viewerTz}</strong>
+        {' '}
+        <button
+          onClick={() => setShowTzOverride(v => !v)}
+          className="text-blue-500 hover:underline text-xs"
+        >
+          {showTzOverride ? 'done' : 'change'}
+        </button>
+      </p>
+
+      {showTzOverride && (
+        <div className="mb-6">
+          <TimezoneSelector value={viewerTz} onChange={tz => { setViewerTz(tz); setShowTzOverride(false) }} />
+        </div>
+      )}
 
       <section className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">Quest Configuration</h2>
-        <ul className="text-sm text-gray-600 space-y-1">
-          <li>Min participants: {team.min_participants}</li>
-          <li>Max participants: {team.max_participants}</li>
-          <li>Max invites: {team.max_invites}</li>
-          <li>Time reserved for invitees: {team.time_reserved_hours} hours</li>
-        </ul>
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-lg font-semibold text-gray-800">Quest Configuration</h2>
+          {!editingConfig && (
+            <button
+              onClick={() => {
+                setConfigDraft({ ...team })
+                setEditingConfig(true)
+              }}
+              className="text-sm text-blue-600 hover:underline"
+            >
+              Edit Config
+            </button>
+          )}
+        </div>
+
+        {editingConfig ? (
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col gap-3">
+            {CONFIG_FIELDS.map(({ field, label }) => (
+              <div key={field} className="flex items-center justify-between gap-4">
+                <label className="text-sm text-gray-700">{label}</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={configDraft[field] ?? ''}
+                  onChange={e => setConfigDraft(prev => ({ ...prev, [field]: e.target.value }))}
+                  className="border border-gray-300 rounded px-2 py-1 w-20 text-sm text-gray-900 text-right"
+                />
+              </div>
+            ))}
+            <div className="flex gap-2 mt-1">
+              <button
+                onClick={handleSaveConfig}
+                disabled={savingConfig}
+                className="bg-blue-600 text-white px-4 py-1.5 rounded text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+              >
+                {savingConfig ? 'Saving…' : 'Save'}
+              </button>
+              <button
+                onClick={() => setEditingConfig(false)}
+                className="bg-gray-200 text-gray-700 px-4 py-1.5 rounded text-sm font-medium hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <ul className="text-sm text-gray-600 space-y-1">
+            <li>Min participants: {team.min_participants}</li>
+            <li>Max participants: {team.max_participants}</li>
+            <li>Max invites: {team.max_invites}</li>
+            <li>Time reserved for invitees: {team.time_reserved_hours} hours</li>
+          </ul>
+        )}
       </section>
 
       <section className="mb-8">
@@ -93,13 +213,19 @@ export default function Team() {
         ) : (
           <ul className="mb-3 space-y-1">
             {members.map(m => (
-              <li key={m.id}>
+              <li key={m.id} className="flex items-center gap-3">
                 <Link
                   to={`/team/${id}/member/${m.id}`}
                   className="text-blue-600 hover:underline text-sm"
                 >
                   {m.name}
                 </Link>
+                <button
+                  onClick={() => handleRemoveMember(m)}
+                  className="text-xs text-red-500 hover:underline"
+                >
+                  Remove
+                </button>
               </li>
             ))}
           </ul>
@@ -114,9 +240,10 @@ export default function Team() {
 
       <section>
         <h2 className="text-lg font-semibold text-gray-800 mb-1">Good Times to Send Invites</h2>
-        <p className="text-xs text-gray-400 mb-3">Next 24 hours — times in UTC</p>
-        <ResultsList goodTimes={goodTimes} />
+        <p className="text-xs text-gray-400 mb-3">Next 24 hours — times in {viewerTz}</p>
+        <ResultsList goodTimes={goodTimes} lastUpdated={lastUpdated} onRefresh={handleRefresh} />
       </section>
+    </div>
     </div>
   )
 }

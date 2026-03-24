@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import AvailabilityGrid from '../components/AvailabilityGrid'
+import TimezoneSelector from '../components/TimezoneSelector'
+import NavBar from '../components/NavBar'
+import { detectBrowserTimezone, localSlotToUtcSlot, utcSlotToLocalSlot } from '../utils/timezone'
 
 export default function MemberEdit() {
   const { id: teamId, memberId } = useParams()
@@ -9,7 +12,7 @@ export default function MemberEdit() {
   const isNew = !memberId
 
   const [name, setName] = useState('')
-  const [timezone, setTimezone] = useState('UTC')
+  const [timezone, setTimezone] = useState(() => detectBrowserTimezone())
   const [selectedSlots, setSelectedSlots] = useState(new Set())
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -22,10 +25,26 @@ export default function MemberEdit() {
         .select('*')
         .eq('id', memberId)
         .maybeSingle()
-      if (member) {
-        setName(member.name)
-        setTimezone(member.timezone)
+      if (!member) return
+
+      const tz = member.timezone || detectBrowserTimezone()
+      setName(member.name)
+      setTimezone(tz)
+
+      // Pre-populate grid: load UTC slots from DB and convert to local
+      const { data: slots } = await supabase
+        .from('availability_slots')
+        .select('*')
+        .eq('member_id', memberId)
+
+      const localSlotSet = new Set()
+      for (const slot of (slots || [])) {
+        const { dayOfWeek, slotIndex } = utcSlotToLocalSlot(slot.day_of_week, slot.slot_index, tz)
+        // Snap to nearest even slot_index (hour boundary) for 1-hour grid
+        const evenSlot = Math.floor(slotIndex / 2) * 2
+        localSlotSet.add(`${dayOfWeek}-${evenSlot}`)
       }
+      setSelectedSlots(localSlotSet)
     }
     load()
   }, [memberId, isNew])
@@ -64,13 +83,14 @@ export default function MemberEdit() {
       }
     }
 
-    // Replace all slots for this member
+    // Replace all slots: convert local selections to UTC before writing
     await supabase.from('availability_slots').delete().eq('member_id', currentMemberId)
 
     if (selectedSlots.size > 0) {
       const rows = Array.from(selectedSlots).map(key => {
-        const [day, slot] = key.split('-').map(Number)
-        return { member_id: currentMemberId, day_of_week: day, slot_index: slot }
+        const [localDay, localSlot] = key.split('-').map(Number)
+        const { dayOfWeek, slotIndex } = localSlotToUtcSlot(localDay, localSlot, timezone)
+        return { member_id: currentMemberId, day_of_week: dayOfWeek, slot_index: slotIndex }
       })
       const { error: slotsError } = await supabase.from('availability_slots').insert(rows)
       if (slotsError) {
@@ -84,6 +104,8 @@ export default function MemberEdit() {
   }
 
   return (
+    <div>
+    <NavBar />
     <div className="max-w-3xl mx-auto px-6 py-10">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">
         {isNew ? 'Add Member' : 'Edit Member'}
@@ -101,21 +123,24 @@ export default function MemberEdit() {
 
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Timezone (IANA, e.g. America/New_York)
+          Timezone
         </label>
-        <input
-          type="text"
-          value={timezone}
-          onChange={e => setTimezone(e.target.value)}
-          className="border border-gray-300 rounded-lg px-3 py-2 w-full max-w-sm text-gray-900"
-        />
+        <p className="text-xs text-gray-500 mb-2">
+          Entering times in: <strong>{timezone}</strong>
+          {isNew ? ' (auto-detected)' : ''}
+        </p>
+        <TimezoneSelector value={timezone} onChange={setTimezone} />
       </div>
 
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Availability (UTC) — click to toggle 1-hour blocks
+          Availability — click to toggle 1-hour blocks
         </label>
-        <AvailabilityGrid selectedSlots={selectedSlots} onChange={setSelectedSlots} />
+        <AvailabilityGrid
+          selectedSlots={selectedSlots}
+          onChange={setSelectedSlots}
+          timezone={timezone}
+        />
       </div>
 
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
@@ -135,6 +160,7 @@ export default function MemberEdit() {
           Cancel
         </button>
       </div>
+    </div>
     </div>
   )
 }

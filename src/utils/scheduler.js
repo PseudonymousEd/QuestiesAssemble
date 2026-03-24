@@ -1,9 +1,9 @@
+import { utcSlotToLocalLabel } from './timezone.js'
+
 const SLOTS_PER_DAY = 48
 const SLOTS_PER_WEEK = 336 // 7 * 48
 
-const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
-export function getGoodInviteTimes(members, allSlots, timeReservedHours, nowUtc) {
+export function getGoodInviteTimes(members, allSlots, timeReservedHours, nowUtc, displayTz = 'UTC') {
   if (members.length === 0) return []
 
   const windowSlots = timeReservedHours * 2
@@ -23,7 +23,6 @@ export function getGoodInviteTimes(members, allSlots, timeReservedHours, nowUtc)
   const dayOfWeek = nowUtc.getUTCDay() // 0=Sun ... 6=Sat
   const minuteOfDay = nowUtc.getUTCHours() * 60 + nowUtc.getUTCMinutes()
   const currentSlot = dayOfWeek * SLOTS_PER_DAY + Math.floor(minuteOfDay / 30)
-  const currentDay = Math.floor(currentSlot / SLOTS_PER_DAY)
 
   const goodTimes = []
 
@@ -49,23 +48,15 @@ export function getGoodInviteTimes(members, allSlots, timeReservedHours, nowUtc)
     if (allCovered) {
       const candidateDay = Math.floor(candidateSlot / SLOTS_PER_DAY)
       const slotIndex = candidateSlot % SLOTS_PER_DAY
-      const totalMinutes = slotIndex * 30
-      const hours = Math.floor(totalMinutes / 60)
-      const minutes = totalMinutes % 60
-      const timeStr = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
 
-      let dayLabel
-      if (candidateDay === currentDay) {
-        dayLabel = 'Today'
-      } else if (candidateDay === (currentDay + 1) % 7) {
-        dayLabel = 'Tomorrow'
-      } else {
-        dayLabel = DAY_NAMES[candidateDay]
-      }
+      // Only report on-the-hour results (even slot indices) to match the 1-hour grid
+      if (slotIndex % 2 !== 0) continue
 
       goodTimes.push({
         weeklySlot: candidateSlot,
-        label: `${dayLabel} ${timeStr} UTC`,
+        dayOfWeek: candidateDay,
+        slotIndex,
+        label: utcSlotToLocalLabel(candidateDay, slotIndex, displayTz, nowUtc),
       })
     }
   }
