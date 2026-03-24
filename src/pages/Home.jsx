@@ -70,7 +70,11 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-gray-900 mb-4">Questies Assemble!</h1>
         <p className="text-lg text-gray-600 mb-6">
           Enter your team's weekly availability so everyone gets a fair chance
-          to accept quest invites before randoms start joining.
+          to accept quest invites on the{' '}
+          <a href="https://www.jointonic.com/" target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+            Tonic
+          </a>{' '}
+          music app before randoms start joining.
         </p>
 
         <div className="bg-amber-50 border border-amber-300 rounded-lg px-4 py-3 mb-6 text-sm text-amber-800">
