@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Team from './pages/Team'
 import MemberEdit from './pages/MemberEdit'
+import ComingFeatures from './pages/ComingFeatures'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Route path="/team/:id" element={<Team />} />
         <Route path="/team/:id/member/new" element={<MemberEdit />} />
         <Route path="/team/:id/member/:memberId" element={<MemberEdit />} />
+        <Route path="/coming-features" element={<ComingFeatures />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

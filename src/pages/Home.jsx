@@ -70,7 +70,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-gray-900 mb-4">Questies Assemble!</h1>
         <p className="text-lg text-gray-600 mb-6">
           Enter your team's weekly availability so everyone gets a fair chance
-          to accept quest invites before the window closes.
+          to accept quest invites before randoms start joining.
         </p>
 
         <div className="bg-amber-50 border border-amber-300 rounded-lg px-4 py-3 mb-6 text-sm text-amber-800">
@@ -146,7 +146,12 @@ export default function Home() {
           {error && <p className="text-red-600 text-sm">{error}</p>}
         </div>
 
-        <p className="text-xs text-gray-400 mt-8">Developed by PseudonymousEd</p>
+        <div className="mt-8 flex flex-col items-center gap-2">
+          <a href="/coming-features" className="text-xs text-blue-500 hover:underline">
+            Coming features →
+          </a>
+          <p className="text-xs text-gray-400">Developed by PseudonymousEd</p>
+        </div>
       </div>
     </div>
   )
