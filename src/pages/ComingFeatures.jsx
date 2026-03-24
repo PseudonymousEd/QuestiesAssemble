@@ -21,6 +21,11 @@ const FEATURES = [
     description:
       'Team access will be protected by accounts and logins, preventing random people from modifying your team\'s schedule.',
   },
+  {
+    title: 'Enable and disable team members',
+    description:
+      'Temporarily exclude a member from scheduling calculations without removing them from the team — useful when someone is on a break or unavailable for a period.',
+  },
 ]
 
 export default function ComingFeatures() {
@@ -28,7 +33,7 @@ export default function ComingFeatures() {
     <div>
       <NavBar />
       <div className="max-w-xl mx-auto px-6 py-10">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Coming Features</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Planned Features</h1>
         <p className="text-sm text-gray-500 mb-8">Here's what's planned for future updates.</p>
         <ul className="space-y-6">
           {FEATURES.map(f => (

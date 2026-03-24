@@ -152,7 +152,7 @@ export default function Home() {
 
         <div className="mt-8 flex flex-col items-center gap-2">
           <a href="/coming-features" className="text-xs text-blue-500 hover:underline">
-            Coming features →
+            Planned features →
           </a>
           <p className="text-xs text-gray-400">Developed by PseudonymousEd</p>
         </div>

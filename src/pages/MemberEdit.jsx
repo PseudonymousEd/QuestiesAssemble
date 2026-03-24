@@ -134,7 +134,7 @@ export default function MemberEdit() {
 
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Availability — click to toggle 1-hour blocks
+          Availability to accept invites — click to toggle 1-hour blocks
         </label>
         <AvailabilityGrid
           selectedSlots={selectedSlots}
