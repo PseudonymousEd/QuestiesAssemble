@@ -16,6 +16,11 @@ const FEATURES = [
     description:
       'Click and drag (or click a start and end cell) to select a range of time slots at once, rather than toggling cells one by one.',
   },
+  {
+    title: 'Security and logins',
+    description:
+      'Team access will be protected by accounts and logins, preventing random people from modifying your team\'s schedule.',
+  },
 ]
 
 export default function ComingFeatures() {
