@@ -42,6 +42,10 @@ const FAQS = [
     a: "I'm glad you asked! No, I don't have backups on the free tier. If this gets enough traction, maybe I'll get a subscription.",
   },
   {
+    q: 'Why are you working on this instead of practicing?',
+    a: "I'm glad you asked! I know, you're right! And I'm spending valuable hours of time doing this when I could be gaining xp for the challenge! I'm crazy!!!",
+  },
+  {
     q: 'Will you sing Yellow for me?',
     a: "I'm glad you asked! No!",
   },
