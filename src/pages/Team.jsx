@@ -12,9 +12,6 @@ function formatTeamId(id) {
 }
 
 const CONFIG_FIELDS = [
-  { field: 'min_participants', label: 'Min participants' },
-  { field: 'max_participants', label: 'Max participants' },
-  { field: 'max_invites', label: 'Max invites' },
   { field: 'time_reserved_hours', label: 'Time reserved for invitees (hours)' },
 ]
 
@@ -213,9 +210,6 @@ export default function Team() {
           </div>
         ) : (
           <ul className="text-sm text-gray-600 space-y-1">
-            <li>Min participants: {team.min_participants}</li>
-            <li>Max participants: {team.max_participants}</li>
-            <li>Max invites: {team.max_invites}</li>
             <li>Time reserved for invitees: {team.time_reserved_hours} hours</li>
           </ul>
         )}

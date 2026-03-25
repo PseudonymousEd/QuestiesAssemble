@@ -111,9 +111,6 @@ export default function Home() {
           {showConfig && (
             <div className="text-left bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col gap-3">
               {[
-                { field: 'min_participants', label: 'Min participants' },
-                { field: 'max_participants', label: 'Max participants' },
-                { field: 'max_invites', label: 'Max invites' },
                 { field: 'time_reserved_hours', label: 'Time reserved for invitees (hours)' },
               ].map(({ field, label }) => (
                 <div key={field} className="flex items-center justify-between gap-4">
