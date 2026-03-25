@@ -6,6 +6,10 @@ const FAQS = [
     a: "I'm glad you asked! This allows quest team members to enter their typical weekly availability so that everyone knows when it's a good time to send out quest invites. Because if you send out invites right after one of your teammates goes to sleep, after a few hours Tonic might open the quest to randoms, and your teammate might wake up with the quest already full and started!!!",
   },
   {
+    q: 'How does it work?',
+    a: 'I\'m glad you asked! You, as the "team organizer" will create a team. Then you can add yourself as a member and put in your availability. Then, you give the link or the team ID to the other members of your team and they\'ll put their availability in (or you can do it for them). Next time you need to send invites for a quest, just check the team page and it will tell you the next time that is good to send invites (to avoid randoms)!',
+  },
+  {
     q: "Can't we just ask everyone if they're available?",
     a: "I'm glad you asked! That may work for your team, but what if you're spread across different time zones and someone is asleep? This helps you keep track, so you can send out invites within a few hours of when they'll wake up. You don't want randoms slipping in.",
   },
