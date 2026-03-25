@@ -21,11 +21,6 @@ const FEATURES = [
     description:
       'Team access will be protected by accounts and logins, preventing random people from modifying your team\'s schedule.',
   },
-  {
-    title: 'Enable and disable team members',
-    description:
-      'Temporarily exclude a member from scheduling calculations without removing them from the team — useful when someone is on a break or unavailable for a period.',
-  },
 ]
 
 export default function ComingFeatures() {

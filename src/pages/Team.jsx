@@ -73,6 +73,12 @@ export default function Team() {
 
   useEffect(() => { load() }, [load])
 
+  useEffect(() => {
+    if (!team) return
+    document.title = `Questie Team ${formatTeamId(id)}`
+    return () => { document.title = 'Questies Assemble!' }
+  }, [team, id])
+
   async function handleSaveConfig() {
     setSavingConfig(true)
     const update = {}
@@ -92,6 +98,14 @@ export default function Team() {
     }
     setEditingConfig(false)
     setSavingConfig(false)
+  }
+
+  async function handleToggleActive(member) {
+    await supabase
+      .from('members')
+      .update({ active: !member.active })
+      .eq('id', member.id)
+    await load()
   }
 
   async function handleRemoveMember(member) {
@@ -123,7 +137,8 @@ export default function Team() {
     )
   }
 
-  const goodTimes = getGoodInviteTimes(members, slots, team.time_reserved_hours, new Date(), viewerTz)
+  const activeMembers = members.filter(m => m.active !== false)
+  const goodTimes = getGoodInviteTimes(activeMembers, slots, team.time_reserved_hours, new Date(), viewerTz)
 
   return (
     <div>
@@ -216,10 +231,16 @@ export default function Team() {
               <li key={m.id} className="flex items-center gap-3">
                 <Link
                   to={`/team/${id}/member/${m.id}`}
-                  className="text-blue-600 hover:underline text-sm"
+                  className={`text-sm hover:underline ${m.active === false ? 'text-gray-400 line-through' : 'text-blue-600'}`}
                 >
                   {m.name}
                 </Link>
+                <button
+                  onClick={() => handleToggleActive(m)}
+                  className="text-xs text-gray-400 hover:underline"
+                >
+                  {m.active === false ? 'Enable' : 'Disable'}
+                </button>
                 <button
                   onClick={() => handleRemoveMember(m)}
                   className="text-xs text-red-500 hover:underline"

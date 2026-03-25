@@ -13,9 +13,17 @@ export default function MemberEdit() {
 
   const [name, setName] = useState('')
   const [timezone, setTimezone] = useState(() => detectBrowserTimezone())
+  const [tzAutoDetected, setTzAutoDetected] = useState(isNew)
+  const [showTzSelector, setShowTzSelector] = useState(false)
   const [selectedSlots, setSelectedSlots] = useState(new Set())
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (!name.trim()) return
+    document.title = `Questie ${name.trim()}`
+    return () => { document.title = 'Questies Assemble!' }
+  }, [name])
 
   useEffect(() => {
     if (isNew) return
@@ -127,9 +135,26 @@ export default function MemberEdit() {
         </label>
         <p className="text-xs text-gray-500 mb-2">
           Entering times in: <strong>{timezone}</strong>
-          {isNew ? ' (auto-detected)' : ''}
+          {tzAutoDetected ? ' (auto-detected)' : ''}
+          {' '}
+          <button
+            type="button"
+            onClick={() => setShowTzSelector(v => !v)}
+            className="text-blue-500 hover:underline text-xs"
+          >
+            {showTzSelector ? 'done' : 'change'}
+          </button>
         </p>
-        <TimezoneSelector value={timezone} onChange={setTimezone} />
+        {showTzSelector && (
+          <TimezoneSelector
+            value={timezone}
+            onChange={tz => {
+              setTimezone(tz)
+              setTzAutoDetected(false)
+              setShowTzSelector(false)
+            }}
+          />
+        )}
       </div>
 
       <div className="mb-6">

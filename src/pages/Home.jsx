@@ -77,6 +77,13 @@ export default function Home() {
           music app before randoms start joining.
         </p>
 
+        <a
+          href="/faq"
+          className="inline-block bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 mb-6"
+        >
+          Read the FAQ
+        </a>
+
         <div className="bg-amber-50 border border-amber-300 rounded-lg px-4 py-3 mb-6 text-sm text-amber-800">
           <strong>⚠ This site is currently IN TEST.</strong> Teams and member data may disappear at any time without notice.
         </div>

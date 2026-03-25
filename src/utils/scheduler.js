@@ -49,15 +49,23 @@ export function getGoodInviteTimes(members, allSlots, timeReservedHours, nowUtc,
       const candidateDay = Math.floor(candidateSlot / SLOTS_PER_DAY)
       const slotIndex = candidateSlot % SLOTS_PER_DAY
 
-      // Only report on-the-hour results (even slot indices) to match the 1-hour grid
-      if (slotIndex % 2 !== 0) continue
-
-      goodTimes.push({
-        weeklySlot: candidateSlot,
-        dayOfWeek: candidateDay,
-        slotIndex,
-        label: utcSlotToLocalLabel(candidateDay, slotIndex, displayTz, nowUtc),
-      })
+      if (i === 0) {
+        // Current slot: label as "Now" regardless of hour boundary
+        goodTimes.push({
+          weeklySlot: candidateSlot,
+          dayOfWeek: candidateDay,
+          slotIndex,
+          label: 'Now',
+        })
+      } else if (slotIndex % 2 === 0) {
+        // Subsequent slots: only report on-the-hour results to match the 1-hour grid
+        goodTimes.push({
+          weeklySlot: candidateSlot,
+          dayOfWeek: candidateDay,
+          slotIndex,
+          label: utcSlotToLocalLabel(candidateDay, slotIndex, displayTz, nowUtc),
+        })
+      }
     }
   }
 

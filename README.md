@@ -6,6 +6,21 @@ Quest invites on Tonic have a limited acceptance window, and filling a team befo
 
 This project was written with the assistance of [Claude](https://claude.ai) (Anthropic).
 
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="images/main.png" width="260" alt="Home page" /></td>
+    <td><img src="images/team.png" width="260" alt="Team page" /></td>
+    <td><img src="images/member.png" width="260" alt="Member edit page" /></td>
+  </tr>
+  <tr>
+    <td align="center">Home</td>
+    <td align="center">Team</td>
+    <td align="center">Member</td>
+  </tr>
+</table>
+
 ## Features
 
 - Create a team with a shareable 10-digit ID
