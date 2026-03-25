@@ -4,12 +4,7 @@ const FEATURES = [
   {
     title: 'Select unavailable times',
     description:
-      'Mark the times you are busy instead of available — the app will treat everything else as free.',
-  },
-  {
-    title: "See everyone's availability",
-    description:
-      'View a combined grid showing when all team members are free at a glance.',
+      'Mark the times you are busy instead of available — the tool will treat everything else as free.',
   },
   {
     title: 'Select times as a block',

@@ -235,15 +235,16 @@ export default function Team() {
                 >
                   {m.name}
                 </Link>
+                <span className="text-xs text-gray-900">({m.timezone})</span>
                 <button
                   onClick={() => handleToggleActive(m)}
-                  className="text-xs text-gray-400 hover:underline"
+                  className="text-xs px-2 py-0.5 rounded border border-gray-300 text-gray-600 hover:bg-gray-100"
                 >
                   {m.active === false ? 'Enable' : 'Disable'}
                 </button>
                 <button
                   onClick={() => handleRemoveMember(m)}
-                  className="text-xs text-red-500 hover:underline"
+                  className="text-xs px-2 py-0.5 rounded border border-red-300 text-red-600 hover:bg-red-50"
                 >
                   Remove
                 </button>
@@ -260,7 +261,10 @@ export default function Team() {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-gray-800 mb-1">Good Times to Send Invites</h2>
+        <div className="flex items-center justify-between mb-1">
+          <h2 className="text-lg font-semibold text-gray-800">Good Times to Send Invites</h2>
+          <Link to={`/team/${id}/grid`} className="text-sm text-blue-600 hover:underline">View availability grid →</Link>
+        </div>
         <p className="text-xs text-gray-400 mb-3">Next 24 hours — times in {viewerTz}</p>
         <ResultsList goodTimes={goodTimes} lastUpdated={lastUpdated} onRefresh={handleRefresh} />
       </section>

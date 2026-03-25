@@ -85,7 +85,7 @@ export default function Home() {
         </a>
 
         <div className="bg-amber-50 border border-amber-300 rounded-lg px-4 py-3 mb-6 text-sm text-amber-800">
-          <strong>⚠ This site is currently IN TEST.</strong> Teams and member data may disappear at any time without notice.
+          <strong>⚠ This tool is currently IN TEST.</strong> Teams and member data may disappear at any time without notice.
         </div>
 
         <div className="flex flex-col gap-4">
