@@ -163,17 +163,14 @@ export default function Team() {
       )}
 
       <section className="mb-8">
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2 mb-2">
           <h2 className="text-lg font-semibold text-gray-800">Quest Configuration</h2>
           {!editingConfig && (
             <button
-              onClick={() => {
-                setConfigDraft({ ...team })
-                setEditingConfig(true)
-              }}
+              onClick={() => { setConfigDraft({ ...team }); setEditingConfig(true) }}
               className="text-sm text-blue-600 hover:underline"
             >
-              Edit Config
+              edit
             </button>
           )}
         </div>
@@ -185,7 +182,8 @@ export default function Team() {
                 <label className="text-sm text-gray-700">{label}</label>
                 <input
                   type="number"
-                  min="1"
+                  min="0"
+                  max="24"
                   value={configDraft[field] ?? ''}
                   onChange={e => setConfigDraft(prev => ({ ...prev, [field]: e.target.value }))}
                   className="border border-gray-300 rounded px-2 py-1 w-20 text-sm text-gray-900 text-right"
@@ -255,10 +253,9 @@ export default function Team() {
       </section>
 
       <section>
-        <div className="flex items-center justify-between mb-1">
-          <h2 className="text-lg font-semibold text-gray-800">Good Times to Send Invites</h2>
-          <Link to={`/team/${id}/grid`} className="text-sm text-blue-600 hover:underline">View availability grid →</Link>
-        </div>
+        <h2 className="text-lg font-semibold text-gray-800 mb-1">Good Times to Send Invites</h2>
+        <Link to={`/team/${id}/grid`} className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 mb-2">Availability Grid</Link>
+        <p className="text-xs text-gray-500 mb-2">Send invites during the following times. Everyone should be available to accept within {team.time_reserved_hours} hours of the invite.</p>
         <p className="text-xs text-gray-400 mb-3">Next 24 hours — times in {viewerTz}</p>
         <ResultsList goodTimes={goodTimes} lastUpdated={lastUpdated} onRefresh={handleRefresh} />
       </section>

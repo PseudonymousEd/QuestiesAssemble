@@ -12,6 +12,7 @@ export default function AvailabilityComparison() {
   const { id } = useParams()
   const [members, setMembers] = useState([])
   const [memberSlotSets, setMemberSlotSets] = useState({})
+  const [timeReservedHours, setTimeReservedHours] = useState(0)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const viewerTz = detectBrowserTimezone()
@@ -20,7 +21,7 @@ export default function AvailabilityComparison() {
     async function load() {
       const { data: teamData } = await supabase
         .from('teams')
-        .select('id')
+        .select('id, time_reserved_hours')
         .eq('id', id)
         .maybeSingle()
 
@@ -54,6 +55,7 @@ export default function AvailabilityComparison() {
 
       setMembers(activeMembers)
       setMemberSlotSets(sets)
+      setTimeReservedHours(teamData.time_reserved_hours || 0)
       setLoading(false)
     }
     load()
@@ -84,7 +86,8 @@ export default function AvailabilityComparison() {
 
   // Build the 24 local hours starting from the current hour
   const now = DateTime.now().setZone(viewerTz).startOf('hour')
-  const hours = Array.from({ length: 24 }, (_, i) => now.plus({ hours: i }))
+  const totalHours = 25 + timeReservedHours
+  const hours = Array.from({ length: totalHours }, (_, i) => now.plus({ hours: i }))
 
   // For each local datetime, compute the UTC weekly slot number
   function utcWeeklySlot(localDt) {
@@ -113,7 +116,7 @@ export default function AvailabilityComparison() {
           <h1 className="text-2xl font-bold text-gray-900">Availability Overview</h1>
           <Link to={`/team/${id}`} className="text-sm text-blue-600 hover:underline">← Back to team</Link>
         </div>
-        <p className="text-xs text-gray-400 mb-6">Next 24 hours — times in {viewerTz}</p>
+        <p className="text-xs text-gray-400 mb-6">Next {totalHours} hours — times in {viewerTz}</p>
 
         {members.length === 0 ? (
           <p className="text-sm text-gray-500">No active members.</p>

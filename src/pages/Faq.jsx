@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 
+// answers may be a string or a JSX element
 const FAQS = [
   {
     q: 'What is this for?',
@@ -31,7 +33,7 @@ const FAQS = [
   },
   {
     q: 'Will you make X modification for me?',
-    a: "I'm glad you asked! Maybe! I have a few modifications planned already, but I don't know how much more time I want to spend on this.",
+    a: <>I'm glad you asked! Maybe! <Link to="/coming-features" className="text-blue-600 hover:underline">I have a few modifications planned already</Link>, but I don't know how much more time I want to spend on this.</>,
   },
   {
     q: 'Why are you only letting a few people use this?',

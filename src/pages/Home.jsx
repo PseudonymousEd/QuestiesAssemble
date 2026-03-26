@@ -117,7 +117,8 @@ export default function Home() {
                   <label className="text-sm text-gray-700">{label}</label>
                   <input
                     type="number"
-                    min="1"
+                    min="0"
+                    max="24"
                     value={config[field]}
                     onChange={e => setConfigField(field, e.target.value)}
                     className="border border-gray-300 rounded px-2 py-1 w-20 text-sm text-gray-900 text-right"

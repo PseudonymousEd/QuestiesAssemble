@@ -13,11 +13,13 @@ This project was written with the assistance of [Claude](https://claude.ai) (Ant
     <td><img src="images/main.png" width="260" alt="Home page" /></td>
     <td><img src="images/team.png" width="260" alt="Team page" /></td>
     <td><img src="images/member.png" width="260" alt="Member edit page" /></td>
+    <td><img src="images/available.png" width="260" alt="Availability grid page" /></td>
   </tr>
   <tr>
     <td align="center">Home</td>
     <td align="center">Team</td>
     <td align="center">Member</td>
+    <td align="center">Availability Grid</td>
   </tr>
 </table>
 
@@ -26,7 +28,7 @@ This project was written with the assistance of [Claude](https://claude.ai) (Ant
 - Create a team with a shareable 10-digit ID
 - Add members and set their weekly availability by timezone
 - Automatically calculates the best invite send times for the next 24 hours
-- Configurable quest parameters (min/max participants, invite window duration)
+- Configurable invite window duration
 
 ## Tech Stack
 
@@ -49,11 +51,28 @@ This project was written with the assistance of [Claude](https://claude.ai) (Ant
 
 ```
 src/
-├── components/      # Shared UI components
-├── pages/           # Route-level page components
-├── utils/           # Scheduling algorithm and timezone utilities
-└── lib/             # Supabase client
+├── components/
+│   ├── AvailabilityGrid.jsx   # Weekly availability toggle grid
+│   ├── NavBar.jsx             # Site-wide navigation bar
+│   ├── ResultsList.jsx        # Good invite times display
+│   └── TimezoneSelector.jsx   # Timezone search and select
+├── pages/
+│   ├── AvailabilityComparison.jsx  # Grid comparing all members' availability
+│   ├── ComingFeatures.jsx          # Planned features page
+│   ├── Faq.jsx                     # FAQ page
+│   ├── Home.jsx                    # Home / team creation page
+│   ├── MemberEdit.jsx              # Add or edit a team member
+│   ├── NotFound.jsx                # 404 page
+│   └── Team.jsx                    # Team overview and invite times
+├── utils/
+│   ├── scheduler.js           # Good invite time calculation
+│   └── timezone.js            # Local ↔ UTC slot conversion
+└── lib/
+    └── supabase.js            # Supabase client
 docs/
+├── brainstorm/      # Early planning notes and FAQ drafts
 ├── plan/            # Original implementation plan
-└── phases/          # Per-phase change logs
+├── phases/          # Per-phase change logs
+└── scripts/         # SQL utility scripts
+images/              # Screenshots used in this README
 ```

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import AvailabilityGrid from '../components/AvailabilityGrid'
 import TimezoneSelector from '../components/TimezoneSelector'
@@ -115,9 +115,12 @@ export default function MemberEdit() {
     <div>
     <NavBar />
     <div className="max-w-3xl mx-auto px-6 py-10">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">
-        {isNew ? 'Add Member' : 'Edit Member'}
-      </h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">
+          {isNew ? 'Add Member' : 'Edit Member'}
+        </h1>
+        <Link to={`/team/${teamId}`} className="text-sm text-blue-600 hover:underline">← Back to team</Link>
+      </div>
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
